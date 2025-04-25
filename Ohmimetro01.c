@@ -118,8 +118,7 @@ int main(){
 
     //Fórmula simplificada: R_x = R_conhecido * ADC_encontrado /(ADC_RESOLUTION - adc_encontrado)
     float Resistor_x = (R_conhecido * media) / (ADC_RESOLUTION - media);
-    
-    //printf("R_x: %f ohms\n", Resistor_x);
+
     //int Rx_padrao = valor_e24_mais_proximo((int)Resistor_x);  //a porcaria nao ler o ADC, talvez seja o simulador
     int Rx_padrao = valor_e24_mais_proximo(610);  //teste passando valores diretos
     int f1, f2, mult;
@@ -133,11 +132,40 @@ int main(){
     sprintf(str_mult, "x: %s", cores[mult]);
 
     ssd1306_fill(&ssd, false);
-    ssd1306_draw_string(&ssd, "Ohmimetro", 20, 0);
-    ssd1306_draw_string(&ssd, str_res, 0, 16);
-    ssd1306_draw_string(&ssd, str_cor1, 0, 32);
-    ssd1306_draw_string(&ssd, str_cor2, 0, 42);
-    ssd1306_draw_string(&ssd, str_mult, 0, 52);
+    //ssd1306_draw_string(&ssd, "Ohmimetro", 30, 0);
+    ssd1306_draw_string(&ssd, str_res, 20, 0);
+    //Legenda das cores
+    ssd1306_draw_string(&ssd, str_cor1, 5, 10);
+    ssd1306_draw_string(&ssd, str_cor2, 5, 20);
+    ssd1306_draw_string(&ssd, str_mult, 5, 30);
+
+        //Desenho do resistor estilizado no display
+        ssd1306_line(&ssd, 23, 45, 98, 45, true);           //Desenha base de cima
+        ssd1306_line(&ssd, 23, 62, 98, 62, true);           //Desenha base de baixo
+       
+        ssd1306_line(&ssd, 28, 45, 28, 62, true);           //Desenha cor faixa 1
+        ssd1306_line(&ssd, 29, 45, 29, 62, true);           //Desenha cor faixa 1
+        ssd1306_line(&ssd, 30, 45, 30, 62, true);           //Desenha cor faixa 1
+        ssd1306_draw_string(&ssd, "1", 32, 50);
+        ssd1306_line(&ssd, 46, 45, 46, 62, true);           //Desenha cor faixa 2
+        ssd1306_line(&ssd, 47, 45, 47, 62, true);           //Desenha cor faixa 2
+        ssd1306_line(&ssd, 48, 45, 48, 62, true);           //Desenha cor faixa 2
+        ssd1306_draw_string(&ssd, "2", 50, 50);
+        ssd1306_line(&ssd, 64, 45, 64, 62, true);           //Desenha cor faixa do multiplicador
+        ssd1306_line(&ssd, 65, 45, 65, 62, true);           //Desenha cor faixa do multiplicador
+        ssd1306_line(&ssd, 66, 45, 66, 62, true);           //Desenha cor faixa do multiplicador
+        ssd1306_draw_string(&ssd, "x", 68, 50);
+        ssd1306_line(&ssd, 88, 45, 88, 62, true);           //Desenha simulando faixa da tolerancia
+        ssd1306_line(&ssd, 89, 45, 89, 62, true);           //Desenha simulando faixa da tolerancia
+
+        ssd1306_line(&ssd, 23, 45, 8, 53, true);           //Desenha lado esquerdo-cima
+        ssd1306_line(&ssd, 23, 62, 8, 52, true);           //Desenha lado esquerdo-baixo
+        ssd1306_line(&ssd, 98, 45, 111, 53, true);           //Desenha lado direito-cima
+        ssd1306_line(&ssd, 98, 62, 111, 52, true);           //Desenha lado direito-baixo
+
+        ssd1306_line(&ssd, 2, 53, 8, 53, true);           //Desenha linha esquerda de saida
+        ssd1306_line(&ssd, 111, 53, 120, 53, true);           //Desenha linha direita de saida
+
     ssd1306_send_data(&ssd);
 
     sleep_ms(700);
