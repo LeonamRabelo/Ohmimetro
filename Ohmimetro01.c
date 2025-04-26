@@ -13,7 +13,7 @@
 #define Botao_A 5     //GPIO para botão A
 
 //Faixa de valores da série E24 de 510 ate 100k ohms
-const int resistores_E24[] = {
+const int resistores_E24[] ={
   510, 560, 620, 680, 750, 820, 910,
   1000, 1100, 1200, 1300, 1500, 1600, 1800, 2000,
   2200, 2400, 2700, 3000, 3300, 3600, 3900, 4300,
@@ -32,7 +32,7 @@ const char* cores[] = {
 };
 
 //Encontra o valor E24 mais próximo
-int valor_e24_mais_proximo(int resistor) {
+int valor_e24_mais_proximo(int resistor){
   int min_diff = 1e9;       //Define um valor muito grande (1bilhao->9 digitos) para inicializar a variavel e realizar as comparações
   int valor_proximo = resistores_E24[0];  //Define o primeiro valor da faixa E24 como o mais proximo
   for (int i = 0; i < E24_SIZE; i++){ //Verifica qual o valor mais proximo
@@ -46,7 +46,7 @@ int valor_e24_mais_proximo(int resistor) {
 }
 
 //Converte valor em ohms para as 3 faixas do código de cores
-void converter_para_cores(int resistor, int* faixa1, int* faixa2, int* multiplicador) {
+void converter_para_cores(int resistor, int* faixa1, int* faixa2, int* multiplicador){
   int base = resistor;      //Guarda o valor a ser convertido
   int potencia = 0;         //Guarda a potência do valor
   while(base >= 100){       //Enquanto o valor for maior ou igual a 100, ele divide o valor por 10 e incrementa a potência
