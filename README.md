@@ -1,12 +1,42 @@
-# Interface Homem-Máquina com Display OLED - RP2040 (BitDogLab)
+# 🔌 Ohmímetro com Reconhecimento Automático do Código de Cores — BitDogLab
 
-# Descrição
+# 📋 Descrição
+Este projeto consiste na criação de um ohmímetro inteligente utilizando a placa BitDogLab (RP2040).
+O sistema realiza a leitura de resistores através de um divisor de tensão, calcula seu valor, identifica o valor comercial mais próximo da série E24 (5%), e determina automaticamente as três primeiras faixas do código de cores.
 
-Este projeto foi desenvolvido a placa BitDogLab. Tem como objetivo criar uma interface homem-máquina (IHM) utilizando um display OLED modelo "SSD1306" (resolução 128x64 pixels).
+Essas informações são exibidas no display OLED SSD1306 (128x64), incluindo:
 
-A aplicação exibe informações em tempo real dos potenciômetros do joystick, como a leitura dos eixos X e Y. Também exibe o estado dos botões físicos e do botão do joystick. As informações são mostradas de forma organizada no display OLED via interface I2C, objetivando
-o estudo/aprendizado das funções da biblioteca do display.
+- Valor numérico da resistência;
 
-Observação.
-- Implementação do modo BOOTSEL por botão externo (Botão B - GPIO 6). Isto facilita a gravação no desenvolvimento do programa. Quando o projeto for finalizado, deve-se retirar
-esta função.
+- Código de cores correspondente (1ª, 2ª faixa e multiplicador);
+
+- Representação gráfica estilizada de um resistor com as faixas desenhadas.
+
+# 🎯 Funcionalidades
+**📈 Leitura da resistência usando o ADC do RP2040.** 
+**🎯 Aproximação automática para o valor E24 mais próximo.**
+**🎨 Conversão para o código de cores padrão dos resistores.**
+**🖥️ Exibição no display OLED (SSD1306):**
+- Valor do resistor;
+- Nome das cores de cada faixa;
+- Desenho de um resistor com marcação das faixas.
+
+**🔄 Média de 500 leituras ADC para maior estabilidade.**
+**🛠️ Modo BOOTSEL utilizando botão para regravar firmware (Botão B).**
+
+# 🖥️ Visualização no Display
+**Topo: Valor da resistência em ohms**
+**Centro: Desenho de um resistor com faixas estilizadas:**
+- Faixa 1 (1º dígito)
+- Faixa 2 (2º dígito)
+- Multiplicador (potência)
+
+**Base: Legenda com as cores correspondentes.**
+
+# ⚠️ Observação Importante
+Atenção: No simulador Wokwi, a leitura do pino ADC 28 pode não funcionar corretamente.
+Para testes físicos reais, descomentar a linha de leitura do ADC e comentar a linha de valor fixo no código.
+![Simulação no Wokwi](image.png)
+
+# Autor
+Leonam S. Rabelo
