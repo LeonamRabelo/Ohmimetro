@@ -91,7 +91,7 @@ void cor_faixas_RGB_WS2812(int faixa1, int faixa2, int multiplicador){
   uint32_t cor1 = urgb_u32(cores_rgb[faixa1].r, cores_rgb[faixa1].g, cores_rgb[faixa1].b);
   uint32_t cor2 = urgb_u32(cores_rgb[faixa2].r, cores_rgb[faixa2].g, cores_rgb[faixa2].b);
   uint32_t cor3 = urgb_u32(cores_rgb[multiplicador].r, cores_rgb[multiplicador].g, cores_rgb[multiplicador].b);
-
+  uint32_t fundo = urgb_u32(2, 2, 2);
   //Pinta as faixas RGB na Matriz
   for(int i = 0; i < NUM_PIXELS; i++){
       int linha = i / 5;      //Linha da matriz
@@ -111,7 +111,7 @@ void cor_faixas_RGB_WS2812(int faixa1, int faixa2, int multiplicador){
       }else if(coluna == 3){
           put_pixel(cor3);  //Coluna 3 = Multiplicador
       }else{
-          put_pixel(0);     //Apaga os outros LEDs
+          put_pixel(fundo);     //Apaga os outros LEDs
       }
   }
 }
@@ -198,7 +198,7 @@ int main(){
     //int Rx_padrao = valor_e24_mais_proximo(1820);  //Teste passando valores diretos, COMENTAR ESSA LINHA EM TESTE FISICO
     int faixa1, faixa2, multiplicador;
     converter_para_cores(Rx_padrao, &faixa1, &faixa2, &multiplicador);  //Os valores serao guardados nas variaveis faixa1, faixa2 e multiplicador de forma direta, uso de ponteiros
-    pintar_colunas_faixas(faixa1, faixa2, multiplicador);
+    cor_faixas_RGB_WS2812(faixa1, faixa2, multiplicador);
 
     //Buffer para escrever os dados e desenhar no display
     char str_resistor[20];
