@@ -104,7 +104,7 @@ void cor_faixas_RGB_WS2812(int faixa1, int faixa2, int multiplicador){
       }else if(coluna == 3){
           put_pixel(cor3);  //Coluna 3 = Multiplicador
       }else{
-          put_pixel(fundo);     //Apaga os outros LEDs
+          put_pixel(fundo);     //Coluna 1 e 5, cor de fundo fraca
       }
   }
 }
@@ -174,6 +174,9 @@ int main(){
       sleep_ms(1);
     }
     float media = soma/500.0f;
+
+    //Proteção contra divisão por zero (evita Resistor_x infinito)
+    if(media >= ADC_RESOLUTION) media = ADC_RESOLUTION - 1;
 
     //Fórmula simplificada: Resistor_x = R_conhecido * ADC_encontrado /(ADC_RESOLUTION - adc_encontrado)
     float Resistor_x = (R_conhecido * media) / (ADC_RESOLUTION - media);
