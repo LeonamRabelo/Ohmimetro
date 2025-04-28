@@ -9,7 +9,6 @@
 #include "ws2812.pio.h"
 #include "pico/bootrom.h"
 
-#define botaoB 6
 #define WS2812_PIN 7    //Pino do WS2812
 #define NUM_PIXELS 25    //Quantidade de LEDs
 #define IS_RGBW false   //Maquina PIO para RGBW
@@ -18,7 +17,6 @@
 #define I2C_SCL 15    //I2C SCL -> clock
 #define endereco 0x3C //Endereço do display
 #define ADC_PIN 28    //GPIO para leitura ADC
-#define Botao_A 5     //GPIO para botão A
 ssd1306_t ssd;         //Estrutura do display
 
 //Funcao para modularizar a inicialização dos componentes
@@ -28,11 +26,6 @@ void inicializar_componentes(){
   int sm = 0;
   uint offset = pio_add_program(pio, &ws2812_program);
   ws2812_program_init(pio, sm, offset, WS2812_PIN, 800000, IS_RGBW);
-
-  //Para ser utilizado o modo BOOTSEL com botão B
-  gpio_init(botaoB);
-  gpio_set_dir(botaoB, GPIO_IN);
-  gpio_pull_up(botaoB);
 
   // I2C Initialisation. Using it at 400Khz.
   i2c_init(I2C_PORT, 400 * 1000);
@@ -74,15 +67,15 @@ typedef struct{
 
 CorRGB cores_rgb[] = {  //Tabela de cores RGB para os resistores
   {0, 0, 0},        //Preto
-  {139, 69, 19},    //Marrom
-  {255, 0, 0},      //Vermelho
-  {255, 195, 0},    //Laranja
-  {255, 255, 0},    //Amarelo
-  {0, 255, 0},      //Verde
-  {0, 0, 255},      //Azul
-  {148, 0, 211},    //Violeta
-  {140, 140, 160},  //Cinza
-  {255, 255, 255}   //Branco
+  {18, 6, 0},    //Marrom
+  {25, 0, 0},      //Vermelho
+  {13, 2, 0},    //Laranja
+  {25, 25, 0},    //Amarelo
+  {0, 25, 0},      //Verde
+  {0, 0, 25},      //Azul
+  {12, 0, 12},    //Violeta
+  {1, 1, 1},  //Cinza
+  {25, 25, 25}   //Branco
 };
 
 //Funcao para pintar as faixas RGB na Matriz de LEDS WS2812
@@ -162,10 +155,6 @@ void converter_para_cores(int resistor, int* faixa1, int* faixa2, int* multiplic
   *multiplicador = potencia;  //Guarda a potência
 }
 
-void gpio_irq_handler(uint gpio, uint32_t events)
-{
-  reset_usb_boot(0, 0);
-}
 
 //Parâmetros do Ohmimetro
 int R_conhecido = 10000;   //Resistor de 10k ohm
@@ -173,12 +162,7 @@ float ADC_VREF = 3.31;     //Tensão de referência do ADC
 int ADC_RESOLUTION = 4095; //Resolução do ADC (12 bits)
 int main(){
   inicializar_componentes();  //Funcao para inicializar os componentes utilizados no projeto
-
-  char str_x[20]; // Buffer para armazenar a string
-  char str_y[20]; // Buffer para armazenar a string
   bool cor = true;
-
-  gpio_set_irq_enabled_with_callback(botaoB, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);  //Interrupção do botão B
 
   while (true){
     adc_select_input(2); // Seleciona o ADC para eixo X. O pino 28 como entrada analógica
@@ -195,7 +179,7 @@ int main(){
     float Resistor_x = (R_conhecido * media) / (ADC_RESOLUTION - media);
 
     int Rx_padrao = valor_e24_mais_proximo((int)Resistor_x);  //wokwi parece nao ler o ADC 28, DESMARCAR ESSA LINHA PARA TESTE FISICO
-    //int Rx_padrao = valor_e24_mais_proximo(1820);  //Teste passando valores diretos, COMENTAR ESSA LINHA EM TESTE FISICO
+   //int Rx_padrao = valor_e24_mais_proximo(510);  //Teste passando valores diretos, COMENTAR ESSA LINHA EM TESTE FISICO
     int faixa1, faixa2, multiplicador;
     converter_para_cores(Rx_padrao, &faixa1, &faixa2, &multiplicador);  //Os valores serao guardados nas variaveis faixa1, faixa2 e multiplicador de forma direta, uso de ponteiros
     cor_faixas_RGB_WS2812(faixa1, faixa2, multiplicador);
